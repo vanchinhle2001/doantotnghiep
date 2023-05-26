@@ -1,0 +1,180 @@
+﻿@using DoAn_LapTrinhWeb.Common.Helpers
+@using DoAn_LapTrinhWeb.Model
+
+@using PagedList
+@model IPagedList<DoAn_LapTrinhWeb.Model.Order>
+@{
+    ViewBag.Title = "Lịch sử mua hàng";
+    Layout = "~/Views/Shared/Main_Layout.cshtml";
+    var culture = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+}
+<style>
+    .view {
+        color: #24262b;
+        font-size:14px;
+        margin-left:-30px;
+        
+    }
+    .px-3 a:hover {
+        background-color: #FE8C23;
+        color:white;
+    }
+</style>
+<!--start tracking order-->
+@if (User.Identity.IsAuthenticated)
+{
+    <!-- ...:::: Start Breadcrumb Section:::... -->
+    <div class="breadcrumb-section breadcrumb-bg-color--black">
+        <div class="breadcrumb-wrapper">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="breadcrumb-nav breadcrumb-nav-color--black breadcrumb-nav-hover-color--golden">
+                            <nav aria-label="breadcrumb">
+                                <ul>
+                                    <li><a href="@Url.Action("Index","Home")">Trang chủ</a></li>
+                                    <li>
+                                        <a href="#">Tài khoản</a>
+                                    </li>
+                                    <li class="active" aria-current="page">
+                                        Lịch sử mua hàng
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ...:::: End Breadcrumb Section:::... -->
+    <!-- ...:::: Start Account Dashboard Section:::... -->
+    <div class="account-dashboard">
+        <div class="container">
+            <div class="row">
+                @Html.Partial("Dashboard")
+                <div class="col-sm-12 col-md-9 col-lg-9">
+                    <!-- Tab panes -->
+                    <div class="tab-content dashboard_content" data-aos="fade-up" data-aos-delay="0">
+                        <div id="orders">
+                            <h4>Lịch sử mua hàng</h4>
+                            <div class="table_page table-responsive" style="overflow-x: hidden; border-left: 0.5px solid #0000001c; border-right: 0.5px solid #0000001c; border-top: 0.5px solid #0000001c;">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Đơn Hàng</th>
+                                            <th>Ngày đặt</th>
+                                            <th>Trạng thái</th>
+                                            <th>Số lượng đặt</th>
+                                            <th>Tổng Tiền</th>
+                                            <th>Hành động</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model)
+                                        {
+                                        <tr>
+                                            <td>#@item.order_id</td>
+                                            <td>@item.oder_date.ToString("HH:mm dd-MM-yyyy")</td>
+                                            <td>@(item.status == "1" ? "Chờ xử lý" : item.status == "2" ? "Đang xử lý" : item.status == "3" ? "Hoàn thành" : "Bị hủy")</td>
+                                            <td>@item.Oder_Detail.Sum(m => m.quantity)</td>
+                                            <td>@item.total.ToString("#,0₫", culture.NumberFormat)</td>
+                                           
+                                            <td class="text-end">
+                                            
+                                                <!--begin::Menu-->
+                                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
+                                                    <!--begin::Menu item-->
+                                                    <div class="menu-item px-3">
+                                                        <a href="@Url.Action("TrackingOrderDetail","Account",new {id=item.order_id})" class="view">Xem đơn hàng</a>
+                                                    </div>
+                                                    <!--end::Menu item-->
+                                                    <!--begin::Menu item-->
+                                                    <div class="menu-item px-3">
+                                                        <a onclick="cancleOpen(@item.order_id)" class="view" >Hủy đơn hàng</a>
+                                                    </div>
+                                                    <!--end::Menu item-->
+                                                </div>
+                                                <!--end::Menu-->
+                                            </td>
+                                        </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- Start Pagination -->
+                        <div class="page-pagination text-center d-flex justify-content-center" data-aos="fade-up" data-aos-delay="0">
+                            @Html.Partial("Pager", Model)
+                        </div>
+                        <!-- End Pagination -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ...:::: End Account Dashboard Section:::... -->
+
+}
+<div class="modal fade" id="cancle-modal" tabindex="-1" aria-hidden="true">
+    <!--begin::Modal dialog-->
+    <div class="modal-dialog modal-dialog-centered mw-500px">
+        <!--begin::Modal content-->
+        <div class="modal-content rounded">
+            <!--begin::Modal header-->
+            <div class="modal-header pb-0 border-0 justify-content-end">
+                <!--begin::Close-->
+                <div class="btn btn-sm btn-icon btn-active-color-primary dimis-modal">
+                    <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+                    <span class="svg-icon svg-icon-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
+                            <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
+                        </svg>
+                    </span>
+                    <!--end::Svg Icon-->
+                </div>
+                <!--end::Close-->
+            </div>
+            <!--begin::Modal header-->
+            <!--begin::Modal body-->
+            <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
+                <!--begin:Form-->
+                <form id="kt_modal_new_target_form" class="form" action="#">
+                    <!--begin::Heading-->
+                    <div class="mb-9 text-center">
+                        <!--begin::Title-->
+                        <i class="bi bi-x-circle text-danger" style="font-size:6rem"></i>
+                        <!--end::Title-->
+                    </div>
+                    <!--end::Heading-->
+                    <!--begin::Label-->
+                    <div class="mb-9 text-center">
+                        <h2 style="color: #4c4b4b; font-size:2rem; font-weight:500;">Xác nhận hủy?</h2>
+                    </div>
+                    <!--end::Label-->
+                    <!--begin::Label-->
+                    <div class="mb-15 fw-bold text-center">
+                        <div class="fs-4" style="color: #565656;">Bạn thực sự muốn hủy đơn hàng "<span id="cancle__id" class="text-primary">(Nội dung hiển thị)</span>"? Quá trình này không thể hoàn tác.</div>
+                    </div>
+                    <!--end::Label-->
+                    <!--end::Price-->
+                    <!--begin::Actions-->
+                    <div class="text-center">
+                        <button type="button" class="btn btn-light me-3 dimis-modal">Hủy bỏ</button>
+                        <button type="button" id="cancle__submit" class="btn btn-danger">Xác nhận</button>
+                    </div>
+                    <!--end::Actions-->
+                </form>
+                <!--end:Form-->
+            </div>
+            <!--end::Modal body-->
+        </div>
+        <!--end::Modal content-->
+    </div>
+    <!--end::Modal dialog-->
+</div>
+@section scripts{
+    <script src="~/Scripts/AdminJS/orders.js"></script>
+}
+    <link href="~/Content/AdminCSS/PagedList.css" rel="stylesheet" />

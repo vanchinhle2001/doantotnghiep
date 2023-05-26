@@ -1,0 +1,308 @@
+﻿@{
+    ViewBag.Title = "Bảng điều khiển";
+    Layout = "~/Areas/Admin/Views/Shared/_MainLayout.cshtml";
+    var culture = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+    var Order = (List<DoAn_LapTrinhWeb.Model.Order>)ViewBag.Order;
+    var ListOrderDetail = (List<DoAn_LapTrinhWeb.Model.Oder_Detail>)ViewBag.ListOrderDetail;
+    var OrderDetail = (List<DoAn_LapTrinhWeb.Model.Oder_Detail>)ViewBag.OrderDetail;
+    var listOrder = (List<DoAn_LapTrinhWeb.Model.Order>)ViewBag.ListOrder;
+    DateTime getLastMonth = DateTime.Now.AddMonths(-1);
+    double totalOrderThisMonth = Convert.ToDouble(Order.Where(m => m.oder_date.Month == DateTime.Now.Month && m.oder_date.Year == DateTime.Now.Year && m.status == "3").Count());
+    double totalOrderLastMonth = Convert.ToDouble(Order.Where(m => m.oder_date.Month == getLastMonth.Month && m.status == "3").Count());
+    double totalPriceOrderThisMonth = Convert.ToDouble(Order.Where(m => m.oder_date.Month == DateTime.Now.Month && m.oder_date.Year == DateTime.Now.Year && m.status == "3").Sum(m => m.total));
+    double totalPriceOrderLastMonth = Convert.ToDouble(Order.Where(m => m.oder_date.Month == getLastMonth.Month && m.status == "3").Sum(m => m.total));
+    double percentOrder = ((1) - ((totalOrderLastMonth - totalOrderThisMonth) / (totalOrderLastMonth)));
+    double percentPriceOrder = ((1) - ((totalPriceOrderLastMonth - totalPriceOrderThisMonth) / (totalPriceOrderLastMonth)));
+    double total = 0;
+    double total2 = 0;
+}
+
+
+
+<!--begin::toolbar-->
+<div class="toolbar" id="kt_toolbar">
+    <!--begin::Container-->
+    <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
+        <!--begin::Page title-->
+        <div data-kt-swapper="true" data-kt-swapper-mode="prepend" data-kt-swapper-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}" class="page-title d-flex align-items-center flex-wrap me-3 mb-5 mb-lg-0">
+            <!--begin::Title-->
+            <h1 class="d-flex align-items-center text-dark fw-bolder fs-3 my-1">Thống kê</h1>
+            <!--end::Title-->
+            <!--begin::Separator-->
+            <span class="h-20px border-gray-300 border-start mx-4"></span>
+            <!--end::Separator-->
+            <!--begin::Breadcrumb-->
+            <ul class="breadcrumb breadcrumb-separatorless fw-bold fs-7 my-1">
+                <!--begin::Item-->
+                <li class="breadcrumb-item text-muted">
+                    <a class="text-muted text-hover-primary">Bảng điều khiển</a>
+                </li>
+                <!--end::Item-->
+                <!--begin::Item-->
+                <li class="breadcrumb-item">
+                    <span class="bullet bg-gray-300 w-5px h-2px"></span>
+                </li>
+                <!--end::Item-->
+                <!--begin::Item-->
+                <li class="breadcrumb-item text-dark">Thống kê</li>
+                <!--end::Item-->
+            </ul>
+            <!--end::Breadcrumb-->
+        </div>
+        <!--end::Page title-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::toolbar-->
+<!--begin::Post-->
+<div class="post d-flex flex-column-fluid" id="kt_post">
+    <!--begin::Container-->
+    <div id="kt_content_container" class="container-xxl">
+        <!--begin::Row-->
+        <div class="@*col-xl-6 mb-md-5 mb-xl-10*@">
+            <!--begin::Tables widget 2-->
+            <div class="card h-md-100">
+                <!--begin::Header-->
+                <div class="card-header align-items-center border-0">
+                    <!--begin::Title-->
+                    <h3 class="fw-bolder text-gray-900 m-0">Sản phẩm  bán trong tháng @DateTime.Now.Month</h3>
+                    <!--end::Title-->
+                </div>
+                <!--end::Header-->
+                <!--begin::Body-->
+                <div class="card-body pt-2">
+                    <!--begin::Nav-->
+                    <ul class="nav nav-pills nav-pills-custom mb-3">
+                        <!--begin::Item-->
+                        <li class="nav-item mb-3 me-3 me-lg-6">
+                            <!--begin::Link-->
+                            <a class="nav-link d-flex justify-content-between flex-column flex-center overflow-hidden active w-80px h-85px py-4" data-bs-toggle="pill" href="#kt_stats_widget_2_tab_2">
+                                <!--begin::Icon-->
+                                <div class="nav-icon">
+                                    <img alt="" src="/Images/Admin/assets/media/svg/products-categories/gaming.svg" class="" />
+                                </div>
+                                <!--end::Icon-->
+                                <!--begin::Subtitle-->
+                                <span class="nav-text text-gray-700 fw-bolder fs-6 lh-1">Laptop</span>
+                                <!--end::Subtitle-->
+                                <!--begin::Bullet-->
+                                <span class="bullet-custom position-absolute bottom-0 w-100 h-4px bg-primary"></span>
+                                <!--end::Bullet-->
+                            </a>
+                            <!--end::Link-->
+                        </li>
+                        <!--end::Item-->
+                        <!--begin::Item-->
+                        <li class="nav-item mb-3 me-3 me-lg-6">
+                            <!--begin::Link-->
+                            <a class="nav-link d-flex justify-content-between flex-column flex-center overflow-hidden w-80px h-85px py-4" data-bs-toggle="pill" href="#kt_stats_widget_2_tab_3">
+                                <!--begin::Icon-->
+                                <div class="nav-icon">
+                                    <img alt="" src="/Images/Admin/assets/media/svg/products-categories/watch.svg" class="" />
+                                </div>
+                                <!--end::Icon-->
+                                <!--begin::Subtitle-->
+                                <span class="nav-text text-gray-600 fw-bolder fs-6 lh-1">P.kiện</span>
+                                <!--end::Subtitle-->
+                                <!--begin::Bullet-->
+                                <span class="bullet-custom position-absolute bottom-0 w-100 h-4px bg-primary"></span>
+                                <!--end::Bullet-->
+                            </a>
+                            <!--end::Link-->
+                        </li>
+                        <!--end::Item-->
+                    </ul>
+                    <!--end::Nav-->
+                    <!--begin::Tab Content-->
+                    <div class="tab-content">
+                        <!--begin::Tap pane-->
+                        <div class="tab-pane fade show active" id="kt_stats_widget_2_tab_2">
+                            <!--begin::Table container-->
+                            <div class="table-responsive">
+                                <!--begin::Table-->
+                                <table class="table table-row-dashed align-middle gs-0 gy-4 my-0">
+                                    <!--begin::Table head-->
+                                    <thead>
+                                        <tr class="fs-7 fw-bolder text-gray-500 border-bottom-0">
+                                            <th width="100">Item</th>
+                                            <th width="150"></th>
+                                            <th width="100">SL</th>
+                                            <th width="100">SL Còn</th>
+                                            <th width="100">Đơn giá</th>
+                                            <th width="100">Thành tiền</th>
+                                            <th width="150">Ngày bán</th>
+                                        </tr>
+                                    </thead>
+                                    <!--end::Table head-->
+                                    <!--begin::Table body-->
+                                    <tbody>
+                                        @foreach (var laptop in ListOrderDetail)
+                                        {
+                                            if (laptop.Product.type == 1 &&laptop.Order.status=="3" && laptop.create_at.Month == DateTime.Now.Month)
+                                            {
+                                                <tr>
+                                                    <td width="100">
+                                                        <img src="@laptop.Product.image" class="w-50px ms-n1" alt="" />
+                                                    </td>
+                                                    <td width="150">
+                                                        <a target="_blank" href="~/@SlugGenerator.SlugGenerator.GenerateSlug(laptop.Product.product_name)-@laptop.product_id" class="text-gray-800 fw-bolder text-hover-primary mb-1 fs-6 text-start pe-0" style="overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">@laptop.Product.product_name</a>
+                                                        <span class="text-gray-400 fw-bold fs-7 d-block text-start ps-0">Item: #@laptop.product_id</span>
+                                                    </td>
+                                                    <td>
+                                                        <span width="100" style="font-weight:bold">x<span>@laptop.quantity</span></span>
+                                                    </td>
+                                                    <td>
+                                                        <span width="100" style="font-weight:bold"><span>@laptop.Product.quantity</span></span>
+                                                    </td>
+                                                    <td width="100">
+                                                        <span class="text-gray-800 fw-bolder d-block fs-6">@laptop.price.ToString("#,0₫", culture.NumberFormat)</span>
+                                                    </td>
+                                                    <td width="100">
+                                                        <span class="text-gray-800 fw-bolder d-block fs-6">@((laptop.price * laptop.quantity).ToString("#,0₫", culture.NumberFormat))</span>
+                                                    </td>
+                                                    <td width="100">
+                                                        <span class="text-gray-800 fw-bolder d-block fs-6">@laptop.create_at</span>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                    <!--end::Table body-->
+                                </table>
+                            </div>
+                            <!--end::Table-->
+                        </div>
+                        <!--end::Tap pane-->
+                        <!--begin::Tap pane-->
+                        <div class="tab-pane fade" id="kt_stats_widget_2_tab_3">
+                            <!--begin::Table container-->
+                            <div class="table-responsive">
+                                <!--begin::Table-->
+                                <table class="table table-row-dashed align-middle gs-0 gy-4 my-0">
+                                    <!--begin::Table head-->
+                                    <thead>
+                                        <tr class="fs-7 fw-bolder text-gray-500 border-bottom-0">
+                                            <th width="100">Item</th>
+                                            <th width="150"></th>
+                                            <th width="100">SL</th>
+                                            <th width="100">SL Còn</th>
+                                            <th width="100">Đơn giá</th>
+                                            <th width="100">Thành tiền</th>
+                                            <th width="100">Ngày bán</th>
+                                        </tr>
+                                    </thead>
+                                    <!--end::Table head-->
+                                    <!--begin::Table body-->
+                                    <tbody>
+                                        @foreach (var accessory in ListOrderDetail)
+                                        {
+                                            if (accessory.Product.type == 2&&accessory.Order.status=="3"  && accessory.create_at.Month == DateTime.Now.Month)
+                                            {
+                                                <tr>
+                                                    <td width="100">
+                                                        <img src="@accessory.Product.image" class="w-50px ms-n1" alt="" />
+                                                    </td>
+                                                    <td width="150">
+                                                        <a target="_blank" href="~/@SlugGenerator.SlugGenerator.GenerateSlug(accessory.Product.product_name)-@accessory.product_id" class="text-gray-800 fw-bolder text-hover-primary mb-1 fs-6 text-start pe-0">@accessory.Product.product_name</a>
+                                                        <span class="text-gray-400 fw-bold fs-7 d-block text-start ps-0">Item: #@accessory.product_id</span>
+                                                    </td>
+                                                    <td width="100">
+                                                        <span style="font-weight:bold">x<span>@accessory.quantity</span></span>
+                                                    </td>
+                                                    <td width="100">
+                                                        <span style="font-weight:bold"><span>@accessory.Product.quantity</span></span>
+                                                    </td>
+                                                    <td width="100">
+                                                        <span class="text-gray-800 fw-bolder d-block fs-6">@accessory.price.ToString("#,0₫", culture.NumberFormat)</span>
+                                                    </td>
+                                                    <td width="100">
+                                                        <span class="text-gray-800 fw-bolder d-block fs-6">@((accessory.price * accessory.quantity).ToString("#,0₫", culture.NumberFormat))</span>
+                                                    </td>
+                                                    <td width="100">
+                                                        <span class="text-gray-800 fw-bolder d-block fs-6">@accessory.create_at</span>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                    <!--end::Table body-->
+                                </table>
+                            </div>
+                            <!--end::Table-->
+                        </div>
+                        <!--end::Tap pane-->
+                    </div>
+                    <!--end::Tab Content-->
+                </div>
+                <!--end: Card Body-->
+            </div>
+            <!--end::Tables widget 2-->
+        </div>
+        <!--end::Row-->
+        <!--begin::Row-->
+        <div class="card-body">
+            <!--begin::Table container-->
+            
+                <!--begin::Table-->
+            <table class="table align-middle table-row-dashed fs-6 gy-3" border="1" style="border:2px solid black ;text-align:center">
+                <!--begin::Table head-->
+                <thead  style="border:2px solid black;text-align:center" >
+                    <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0" style="text-align:center">
+                        <th width="100" style="color:black;text-align:center">Tổng số sản phẩm bán trong tháng</th>
+                        <th width="100" style="color:black;text-align:center">Thành tiền</th>
+                    </tr>
+                </thead>
+                <!--end::Table head-->
+                <!--begin::Table body-->
+                <tbody class="fw-bolder text-gray-600" style="border:2px solid black ;text-align:center">
+
+                  
+                    <tr>
+                        <td width="100">
+                            <span style="font-weight:bold;color:black"><span>@ListOrderDetail.Where((m =>m.create_at.Month == DateTime.Now.Month && m.Order.status == "3")).Sum(m => m.quantity).ToString()</span></span>
+                        </td>
+
+                        <td width="100">
+                            <span class="text-gray-800 fw-bolder d-block fs-6" style="color:black">
+                                @Order.Where(m => m.oder_date.Month == DateTime.Now.Month && m.oder_date.Year == DateTime.Now.Year).Sum(m => m.total).ToString("#,0đ", culture.NumberFormat)
+                            </span>
+                        </td>
+
+
+                    </tr>
+                    
+
+                </tbody>
+                <!--end::Table body-->
+            </table>
+            </div>
+            <!--end::Table-->
+        
+        <div class="card-header pt-5">
+            <!--begin::Title-->
+            <div class="card-title d-flex flex-column">
+                <!--begin::Info-->
+                <div class="d-flex align-items-center">
+                    <!--begin::Amount-->
+
+                    <span class="fs-2hx fw-bolder text-dark me-2 lh-1">@Order.Where(m => m.oder_date.Month == DateTime.Now.Month && m.oder_date.Year == DateTime.Now.Year).Sum(m => m.total).ToString("#,0đ", culture.NumberFormat)</span>
+
+                    <!--end::Amount-->
+                </div>
+                <!--end::Info-->
+                <!--begin::Subtitle-->
+                <span style="color:black;font-weight:500" >Doanh thu trong tháng @DateTime.Now.Month </span>
+                <!--end::Subtitle-->
+            </div>
+            <!--end::Title-->
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!--end::Post-->
+@section scripts{
+    <script src="~/Scripts/AdminJS/vis-timeline.bundle.js"></script>
+    <script src="~/Scripts/AdminJS/widgets.bundle.js"></script>
+    <script src="~/Scripts/AdminJS/test.js"></script>
+}
